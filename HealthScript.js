@@ -214,7 +214,7 @@ function drawGraph() {
 	canvas.clearRect(0,0,id('canvas').width+10,scr.h);
 	background.fillStyle='black';
 	background.fillRect(0,0,scr.w,24); // header - black background
-	background.font='20px Monospace';
+	background.font='16px Monospace';
 	background.fillStyle='hotpink';
 	background.fillText('kg',25,20);
 	background.fillStyle='orange';
@@ -222,9 +222,17 @@ function drawGraph() {
 	background.fillStyle='yellow';
 	background.fillText('miles',205,20);
 	background.lineWidth=1;
-	// draw horizontal gridlines and kWh labels on background
-	for(i=0;i<11;i++) background.fillText((i+65)*intervalV,2,scr.h-margin-i*intervalY-5); // kg at 100px intervals
-	background.fillText('kg',2,scr.h-margin-11*intervalY+20); // vertical axis label
+	// draw horizontal gridlines and labels on background
+	for(i=0;i<11;i++) {
+		background.fillStyle='hotpink';
+		background.fillText((i+65)*intervalV,2,scr.h-margin-i*intervalY-5); // kg at 100px intervals
+		background.fillStyle='orange';
+		background.fillText((i+12)*intervalV,24,scr.h-margin-i*intervalY-5); // % at 100px intervals
+	}
+	background.fillStyle='hotpink'; // vertical axis labels
+	background.fillText('kg',2,scr.h-margin-11*intervalY+20);
+	background.fillStyle='orange';
+	background.fillText('%',24,scr.h-margin-11*intervalY+20);
 	background.strokeStyle='silver'; // grey lines
 	background.beginPath();
 	for(i=0;i<12;i++) {
@@ -250,8 +258,8 @@ function drawGraph() {
 		canvas.moveTo(x,scr.h-margin);
 		canvas.lineTo(x,scr.h-margin-12*intervalY); // vertical gridline
 		m=parseInt(logs[i].date.substr(5,2))-1;
-		canvas.fillText(letters.charAt(m),x-5,scr.h-margin-11*intervalY-5); // month letter just above and below grid
-		canvas.fillText(letters.charAt(m),x-5,scr.h-margin-5);
+		canvas.fillText(letters.charAt(m),x,scr.h-margin-11*intervalY-5); // month letter just above and below grid
+		canvas.fillText(letters.charAt(m),x,scr.h-margin-5);
 		if(m<1) {
 			year=logs[i].date.substr(0,4);
 			canvas.fillText(year,x,scr.h-margin-11*intervalY-24); // YYYY above month labels
@@ -290,6 +298,8 @@ function drawGraph() {
     x=Math.floor((i-1)*intervalX);
     while(i<logs.length) {
 		val=logs[i].fat;
+		console.log('fat '+i+': '+val+'%');
+		val-=12; // 12% upwards
 		val*=intervalY/intervalV; // convert %fat to pixels
 		x+=intervalX
 		var y=scr.h-margin-val;
