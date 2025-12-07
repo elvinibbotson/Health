@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<meta name="theme-color" content="black">
+  	<title>Health</title>
+  	<link rel="stylesheet" type="text/css" href="HealthStyles.css">
+  	<link rel="manifest" href="manifest.json">
+  	<meta name="application-name" content="Health">
+</head>
+<body>
+<header>
+    <div id="heading">
+        <span class='grey'>end..</span><span class='red'>kg</span><span class='orange'>fat%</span><span class='blue'>eMTB</span><span class='green'>Air20</span><span class='yellow'>miles</span>
+    </div>
+</header>
+<div id='main'>
+<div id="listPanel"><ul id="list" class="logList"></ul></div>
+<div id='curtain'></div>
+<div id='graphBackground'><canvas id='background' x='0' y='0' width='100%' height='100%'></canvas></div>
+<div id='graphPanel'><canvas id='canvas' x='0' y='0' width='100%' height='100%'></canvas></div>
+<div id='buttonNew' class='round-button'></div>
+<!--div id='messageDialog' class='dialog'><p id='message'></p></div-->
+<div id="logDialog" class="dialog">
+    <div class="dialog-body">date <input type="date" id="logDate"/></div>
+    <div class='dialog-title'>WEIGHT...</div>
+    <div class="dialog-body"><input type='number' id='logWeight' min='0' max='99999'/> kg weight</div>
+    <div class='dialog-body'><input type='number' id='logFat' min='0' max='99999'/> % fat</div>
+    <div class='dialog-title'>CYCLE...</div>
+    <div class="dialog-body"><input type='number' id='logMTB' min='0' max='99999'/> eMTB miles </div>
+    <div class='dialog-body'><input type='number' id='logAir' min='0' max='99999'/> Air20 miles</div>
+    <div class="dialog-buttons">
+	    <button id="buttonDeleteLog" class="delete-button"></button>
+      	<button id="buttonSaveLog" class="save-button"></button>
+      	<button id='buttonAddLog' class='add-button'></button>
+    </div>
+</div>
+<div id="deleteDialog" class="dialog">
+	<div class="dialog-title">Delete</div>
+	<div  id="deleteText" class="dialog-body">text</div>
+	<div class="dialog-buttons">
+        <button id="buttonDeleteConfirm" class="delete-button"></button>
+	</div>
+</div>
+<div id='dataDialog' class='dialog'>
+	<div id='dataMessage'></div>
+	<button id='backupButton' class='text-button'>BACKUP</button>
+	<button id='restoreButton' class='text-button'>RESTORE</button>
+</div>
+<input type="file" id="fileChooser" accept=".json" style="display: none">
+</div>
+<script src="HealthScript.js" async></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+</body>
+</html>
