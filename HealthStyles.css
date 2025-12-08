@@ -82,8 +82,8 @@ input {
 	display: none;
 }
 .dialog > div {
-  padding-top: 24px;
-  padding-left: 24px;
+  padding-top: 10px;
+  padding-left: 10px;
   padding-right: 24px;
 }
 .right {
@@ -125,23 +125,11 @@ input {
 	float: left;
 	margin-left:80%;
 }
-/*
-.yellow {
-	color: yellow;
-	display: block;
-	position: absolute;
-	float: left;
-	margin-left:84%;
-}
-*/
 .dialog-title {
   padding-top: 20px;
   font-size: 1em;
   font-weight: bold;
 }
-.dialog-body {
-  padding-top: 5px;
-  padding-bottom: 5px; }
   
 .dialog-body select {
     width: 30%;
@@ -181,7 +169,7 @@ input {
 	background-color: #000;
 }
 #logDate {
-	width: 120px;
+	width: 150px;
 	height: 34px;
 	font-family: 'Courier',monospace;
 }

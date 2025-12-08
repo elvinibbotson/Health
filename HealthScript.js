@@ -261,11 +261,11 @@ function drawGraph() {
 		canvas.moveTo(x,scr.h-margin);
 		canvas.lineTo(x,scr.h-margin-10*intervalY); // vertical gridline
 		m=parseInt(logs[i].date.substr(5,2))-1;
-		canvas.fillText(letters.charAt(m),x,scr.h-margin-11*intervalY-5); // month letter just above and below grid
+		canvas.fillText(letters.charAt(m),x,scr.h-margin-10*intervalY-5); // month letter just above and below grid
 		canvas.fillText(letters.charAt(m),x,scr.h-margin-5);
 		if(m<1) {
 			year=logs[i].date.substr(0,4);
-			canvas.fillText(year,x,scr.h-margin-11*intervalY-24); // YYYY above month labels
+			canvas.fillText(year,x,scr.h-margin-10*intervalY-24); // YYYY above month labels
 		}
 		i++;
 	}
@@ -431,6 +431,8 @@ function backup() {
 	id('dataMessage').innerText='';
 	id('restoreButton').disabled=false;
 	toggleDialog('dataDialog',false);
+	backupDay=Math.floor(new Date().getTime()/86400000);
+	window.localStorage.setItem('backupDay',backupDay);
 }
 // START-UP CODE
 scr.w=screen.width;
