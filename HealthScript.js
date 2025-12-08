@@ -4,7 +4,7 @@ function id(el) {
 function pad(n) {
 	// console.log('pad '+n+' to 5 chars - starting from '+n.length);
 	var num=n;
-	// console.log('n: '+n+' ('+n.length+' chars)');
+	console.log('n: '+n+' ('+n.length+' chars)');
 	while(num.length<5) num='&nbsp;'+num;
 	return num;
 }
@@ -26,6 +26,7 @@ var intervalX=0;
 var intervalY=0;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
 var backupDay;
+var height=1.725; // 1725mm (5'8")
 // var root; // OPFS root directory
 // DRAG TO GO BACK
 id('main').addEventListener('touchstart', function(event) {
@@ -188,7 +189,7 @@ function populateList() {
 		mon=parseInt(d.substr(5,2))-1;
 		mon*=3;
 		d=months.substr(mon,3)+" "+d.substr(2,2);
-		html='<span class="grey">'+d+'</span><span class="red">'+pad(logs[i].weight)+'</span><span class="orange">'+pad(logs[i].fat)+'</span><span class="blue">'+pad(mtbMiles)+'</span><span class="yellow">'+pad(airMiles)+'</span><span class="orange">'+pad(mtbMiles+airMiles)+'</span>';
+		html='<span class="grey">'+d+'</span><span class="red">'+pad(logs[i].weight)+'</span><span class="orange">'+pad(logs[i].fat)+'</span><span class="blue">'+pad(mtbMiles)+'</span><span class="lightgreen">'+pad(airMiles)+'</span>';
 		itemText.innerHTML=html;
 		listItem.appendChild(itemText);
 		id('list').appendChild(listItem);
@@ -198,7 +199,7 @@ function populateList() {
 function drawGraph() {
 	var letters='JFMAMJJASOND';
 	var margin=90; // bottom margin to allow space for Android controls
-	var intervalV=1; // 1kg interval for horizontal gridlines
+	var intervalV=10; // 10kg interval for horizontal gridlines
 	var n=logs.length-1;
 	console.log('graph spans '+n+' months');
 	console.log('screen width: '+scr.w+'; intervalX: '+intervalX);
@@ -216,26 +217,28 @@ function drawGraph() {
 	background.fillRect(0,0,scr.w,24); // header - black background
 	background.font='16px Monospace';
 	background.fillStyle='hotpink';
-	background.fillText('kg',25,20);
+	background.fillText('weight',25,20);
+	background.fillStyle='lightgreen';
+	background.fillText('BMI',100,20);
 	background.fillStyle='orange';
-	background.fillText('%',115,20);
+	background.fillText('fat',175,20);
 	background.fillStyle='yellow';
-	background.fillText('miles',205,20);
+	background.fillText('miles',250,20);
 	background.lineWidth=1;
 	// draw horizontal gridlines and labels on background
-	for(i=0;i<11;i++) {
-		background.fillStyle='hotpink';
-		background.fillText((i+65)*intervalV,2,scr.h-margin-i*intervalY-5); // kg at 100px intervals
-		background.fillStyle='orange';
-		background.fillText((i+12)*intervalV,24,scr.h-margin-i*intervalY-5); // % at 100px intervals
+	for(i=0;i<10;i++) {
+		background.fillStyle='white';
+		background.fillText((i)*intervalV,2,scr.h-margin-i*intervalY-5); // kg at 100px intervals
+		// background.fillStyle='orange';
+		// background.fillText((i+12)*intervalV,24,scr.h-margin-i*intervalY-5); // % at 100px intervals
 	}
-	background.fillStyle='hotpink'; // vertical axis labels
-	background.fillText('kg',2,scr.h-margin-11*intervalY+20);
-	background.fillStyle='orange';
-	background.fillText('%',24,scr.h-margin-11*intervalY+20);
+	// background.fillStyle='hotpink'; // vertical axis labels
+	// background.fillText('kg',2,scr.h-margin-9*intervalY+20);
+	// background.fillStyle='orange';
+	// background.fillText('%',24,scr.h-margin-9*intervalY+20);
 	background.strokeStyle='silver'; // grey lines
 	background.beginPath();
-	for(i=0;i<12;i++) {
+	for(i=0;i<10;i++) {
 		background.moveTo(0,scr.h-margin-i*intervalY);
 		background.lineTo(scr.w,scr.h-margin-i*intervalY); // grey lines
 	}
@@ -256,7 +259,7 @@ function drawGraph() {
 		x=Math.floor(i*intervalX);
 		console.log('gridline '+i+' at '+x);
 		canvas.moveTo(x,scr.h-margin);
-		canvas.lineTo(x,scr.h-margin-12*intervalY); // vertical gridline
+		canvas.lineTo(x,scr.h-margin-10*intervalY); // vertical gridline
 		m=parseInt(logs[i].date.substr(5,2))-1;
 		canvas.fillText(letters.charAt(m),x,scr.h-margin-11*intervalY-5); // month letter just above and below grid
 		canvas.fillText(letters.charAt(m),x,scr.h-margin-5);
@@ -279,7 +282,6 @@ function drawGraph() {
 	while(i<logs.length) {
 		val=logs[i].weight;
 		console.log('weight '+i+': '+val+'kg');
-		val-=65; // kg above 65kg
 		val*=intervalY/intervalV; // convert kg to pixels
 		console.log('ie '+val+'px');
 		x+=intervalX;
@@ -289,6 +291,27 @@ function drawGraph() {
 		i++;
 	}
     canvas.stroke();
+    // draw BMI dots
+    canvas.beginPath();
+    i=startLog;
+    x=Math.floor((i-1)*intervalX);
+    while(i<logs.length) {
+    	var val=logs[i].weight;
+    	val/=(height*height); // BMI
+    	console.log('BMI: '+val);
+    	if(val<25) canvas.fillStyle='lightgreen';
+		else if((val<18)||(val<30)) canvas.fillStyle='yellow';
+		else canvas.fillStyle='hotpink';
+    	val*=intervalY/intervalV; // convert to pixels
+    	x+=intervalX;
+		var y=scr.h-margin-val;
+		console.log('y: '+y);
+		canvas.moveTo(x,y);
+		canvas.arc(x,y,3,0,2*Math.PI);
+		canvas.fill();
+    	i++;
+    }
+    canvas.fill();
     // next draw fat chart
     console.log('fat');
     canvas.strokeStyle='orange';
@@ -299,7 +322,7 @@ function drawGraph() {
     while(i<logs.length) {
 		val=logs[i].fat;
 		console.log('fat '+i+': '+val+'%');
-		val-=12; // 12% upwards
+		// val-=12; // 12% upwards
 		val*=intervalY/intervalV; // convert %fat to pixels
 		x+=intervalX
 		var y=scr.h-margin-val;
@@ -320,8 +343,10 @@ function drawGraph() {
 		val*=intervalY/10/intervalV; // convert miles to pixels
 		x+=intervalX;
 		var y=scr.h-margin-val;
-		if(i==startLog) canvas.moveTo(x,y);
-		else canvas.lineTo(x,y);
+		canvas.moveTo(x,scr.h-margin);
+		// if(i==startLog) canvas.moveTo(x,y);
+		// else 
+		canvas.lineTo(x,y);
 		i++;
 	}
 	canvas.stroke();
@@ -413,7 +438,7 @@ scr.h=screen.height;
 console.log('screen size: '+scr.w+'x'+scr.h+'px');
 id('main').style.width=scr.w+'px';
 intervalX=scr.w/14; // 14 intervals visible across graph
-intervalY=scr.h/14; // 14 intervals vertically 
+intervalY=scr.h/12; // 12 intervals vertically 
 console.log('intervals: '+intervalX+'x'+intervalY+'px');
 id("canvas").width=scr.w;
 id("canvas").height=scr.h;

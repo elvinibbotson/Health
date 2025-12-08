@@ -109,22 +109,23 @@ input {
 	display: block;
 	position: absolute;
 	float: left;
-	margin-left:36%;
+	margin-left:40%;
 }
 .blue {
 	color: skyblue;
 	display: block;
 	position: absolute;
 	float: left;
-	margin-left:52%;
+	margin-left:60%;
 }
 .green {
 	color: lightgreen;
 	display: block;
 	position: absolute;
 	float: left;
-	margin-left:68%;
+	margin-left:80%;
 }
+/*
 .yellow {
 	color: yellow;
 	display: block;
@@ -132,6 +133,7 @@ input {
 	float: left;
 	margin-left:84%;
 }
+*/
 .dialog-title {
   padding-top: 20px;
   font-size: 1em;
