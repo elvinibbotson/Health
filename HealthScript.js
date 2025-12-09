@@ -342,6 +342,8 @@ function drawGraph() {
     i=startLog;
     x=Math.floor((i-1)*intervalX);
     while(i<logs.length) {
+    	if(logs[i-1].mtb=='') logs[i-1].mtb=logs[i-1].mtb==logs[i].mtb;
+    	if(logs[i-1].air=='') logs[i-1].air=logs[i-1].mtb==logs[i].air;
 		val=(logs[i].mtb-logs[i-1].mtb)+(logs[i].air-logs[i-1].air);
 		val*=intervalY/intervalV; // convert miles to pixels
 		x+=intervalX;
