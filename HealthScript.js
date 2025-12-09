@@ -172,6 +172,7 @@ function populateList() {
 	var mon=0;
 	var mtbMiles=airMile=0;
   	for(var i=logs.length-1; i>=0; i--) { // list latest first
+  		/*
   		if(i<1) {
   			mtbMiles=logs[0].mtb;
   			airMiles=logs[0].air;
@@ -180,6 +181,9 @@ function populateList() {
   			mtbMiles=logs[i].mtb-logs[i-1].mtb;
   			airMiles=logs[i].air-logs[i-1].air;
   		}
+  		*/
+  		if(logs[i].mtb<1) logs[i].mtb='';
+  		if(logs[i].air<1) logs[i].air='';
   		var listItem=document.createElement('li');
 		listItem.index=i;
 	 	listItem.classList.add('log-item');
@@ -189,7 +193,7 @@ function populateList() {
 		mon=parseInt(d.substr(5,2))-1;
 		mon*=3;
 		d=months.substr(mon,3)+" "+d.substr(2,2);
-		html='<span class="grey">'+d+'</span><span class="red">'+pad(logs[i].weight)+'</span><span class="orange">'+pad(logs[i].fat)+'</span><span class="blue">'+pad(mtbMiles)+'</span><span class="lightgreen">'+pad(airMiles)+'</span>';
+		html='<span class="grey">'+d+'</span><span class="red">'+pad(logs[i].weight)+'</span><span class="orange">'+pad(logs[i].fat)+'</span><span class="blue">'+pad(logs[i].mtb)+'</span><span class="lightgreen">'+pad(logs[i].air)+'</span>';
 		itemText.innerHTML=html;
 		listItem.appendChild(itemText);
 		id('list').appendChild(listItem);
@@ -322,8 +326,7 @@ function drawGraph() {
     while(i<logs.length) {
 		val=logs[i].fat;
 		console.log('fat '+i+': '+val+'%');
-		// val-=12; // 12% upwards
-		val*=intervalY/intervalV; // convert %fat to pixels
+		val*=intervalY/intervalV; // convert kg fat to pixels
 		x+=intervalX
 		var y=scr.h-margin-val;
 		if(i==startLog) canvas.moveTo(x,y);
@@ -340,16 +343,13 @@ function drawGraph() {
     x=Math.floor((i-1)*intervalX);
     while(i<logs.length) {
 		val=(logs[i].mtb-logs[i-1].mtb)+(logs[i].air-logs[i-1].air);
-		val*=intervalY/10/intervalV; // convert miles to pixels
+		val*=intervalY/intervalV; // convert miles to pixels
 		x+=intervalX;
 		var y=scr.h-margin-val;
 		canvas.moveTo(x,scr.h-margin);
-		// if(i==startLog) canvas.moveTo(x,y);
-		// else 
 		canvas.lineTo(x,y);
 		i++;
 	}
-	canvas.stroke();
 	canvas.stroke();
 }
 function selectLog() {
