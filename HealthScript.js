@@ -172,16 +172,7 @@ function populateList() {
 	var mon=0;
 	var mtbMiles=airMile=0;
   	for(var i=logs.length-1; i>=0; i--) { // list latest first
-  		/*
-  		if(i<1) {
-  			mtbMiles=logs[0].mtb;
-  			airMiles=logs[0].air;
-  		}
-  		else {
-  			mtbMiles=logs[i].mtb-logs[i-1].mtb;
-  			airMiles=logs[i].air-logs[i-1].air;
-  		}
-  		*/
+  		console.log('log '+i+': '+logs[i].weight+' '+logs[i].fat+' '+logs[i].mtb+' '+logs[i].air);
   		if(logs[i].mtb<1) logs[i].mtb='';
   		if(logs[i].air<1) logs[i].air='';
   		var listItem=document.createElement('li');
@@ -193,7 +184,7 @@ function populateList() {
 		mon=parseInt(d.substr(5,2))-1;
 		mon*=3;
 		d=months.substr(mon,3)+" "+d.substr(2,2);
-		html='<span class="grey">'+d+'</span><span class="red">'+pad(logs[i].weight)+'</span><span class="orange">'+pad(logs[i].fat)+'</span><span class="blue">'+pad(logs[i].mtb)+'</span><span class="lightgreen">'+pad(logs[i].air)+'</span>';
+		html='<span class="grey">'+d+'</span><span class="red">'+pad(logs[i].weight)+'</span><span class="orange">'+pad(logs[i].fat)+'</span><span class="blue">'+pad(logs[i].mtb)+'</span><span class="green">'+pad(logs[i].air)+'</span>';
 		itemText.innerHTML=html;
 		listItem.appendChild(itemText);
 		id('list').appendChild(listItem);
@@ -226,7 +217,7 @@ function drawGraph() {
 	background.fillText('BMI',100,20);
 	background.fillStyle='orange';
 	background.fillText('fat',175,20);
-	background.fillStyle='yellow';
+	background.fillStyle='skyblue';
 	background.fillText('miles',250,20);
 	background.lineWidth=1;
 	// draw horizontal gridlines and labels on background
@@ -295,27 +286,6 @@ function drawGraph() {
 		i++;
 	}
     canvas.stroke();
-    // draw BMI dots
-    canvas.beginPath();
-    i=startLog;
-    x=Math.floor((i-1)*intervalX);
-    while(i<logs.length) {
-    	var val=logs[i].weight;
-    	val/=(height*height); // BMI
-    	console.log('BMI: '+val);
-    	if(val<25) canvas.fillStyle='lightgreen';
-		else if((val<18)||(val<30)) canvas.fillStyle='yellow';
-		else canvas.fillStyle='hotpink';
-    	val*=intervalY/intervalV; // convert to pixels
-    	x+=intervalX;
-		var y=scr.h-margin-val;
-		console.log('y: '+y);
-		canvas.moveTo(x,y);
-		canvas.arc(x,y,3,0,2*Math.PI);
-		canvas.fill();
-    	i++;
-    }
-    canvas.fill();
     // next draw fat chart
     console.log('fat');
     canvas.strokeStyle='orange';
@@ -336,14 +306,14 @@ function drawGraph() {
 	canvas.stroke();
 	// miles cycled...
 	console.log('miles');
-	canvas.strokeStyle='yellow';
+	canvas.strokeStyle='skyblue';
 	canvas.setLineDash([]);
     canvas.beginPath();
     i=startLog;
     x=Math.floor((i-1)*intervalX);
     while(i<logs.length) {
-    	if(logs[i-1].mtb=='') logs[i-1].mtb=logs[i-1].mtb==logs[i].mtb;
-    	if(logs[i-1].air=='') logs[i-1].air=logs[i-1].mtb==logs[i].air;
+    	if(logs[i-1].mtb=='') logs[i-1].mtb=logs[i].mtb;
+    	if(logs[i-1].air=='') logs[i-1].air=logs[i].air;
 		val=(logs[i].mtb-logs[i-1].mtb)+(logs[i].air-logs[i-1].air);
 		val*=intervalY/intervalV; // convert miles to pixels
 		x+=intervalX;
@@ -353,6 +323,27 @@ function drawGraph() {
 		i++;
 	}
 	canvas.stroke();
+	// finally, draw BMI dots
+    canvas.beginPath();
+    i=startLog;
+    x=Math.floor((i-1)*intervalX);
+    while(i<logs.length) {
+    	var val=logs[i].weight;
+    	val/=(height*height); // BMI
+    	console.log('BMI: '+val);
+    	if(val<25) canvas.fillStyle='lightgreen';
+		else if((val<18)||(val<30)) canvas.fillStyle='yellow';
+		else canvas.fillStyle='hotpink';
+    	val*=intervalY/intervalV; // convert to pixels
+    	x+=intervalX;
+		var y=scr.h-margin-val;
+		console.log('y: '+y);
+		canvas.moveTo(x,y);
+		canvas.arc(x,y,4,0,2*Math.PI);
+		canvas.fill();
+    	i++;
+    }
+    canvas.fill();
 }
 function selectLog() {
 	if(currentLog) currentLog.children[0].style.backgroundColor='gray'; // deselect any previously selected item
