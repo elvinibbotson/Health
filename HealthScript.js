@@ -57,7 +57,7 @@ id('main').addEventListener('touchend', function(event) {
     		id('buttonNew').style.display='none';
     		drawGraph();
     	}
-    	else if((drag.x>50)&&(currentDialog)) toggleDialog(currentDialog,false); // drag left to close dialog
+    	// else if((drag.x>50)&&(currentDialog)) toggleDialog(currentDialog,false); // drag left to close dialog
     }
     else { // drag vertically to return to list view
     	canvasL-=drag.x;
@@ -136,6 +136,10 @@ id('buttonDeleteConfirm').addEventListener('click', function() {
 	populateList();
 	toggleDialog('deleteDialog', false);
 });
+// CLOSE DIALOG
+id('curtain').addEventListener('click',function() {
+	toggleDialog(currentDialog,false);
+})
 // SHOW/HIDE DIALOGS
 function  toggleDialog(d, visible) {
     console.log('toggle '+d+' - '+visible);
