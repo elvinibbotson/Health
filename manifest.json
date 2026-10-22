@@ -1,0 +1,17 @@
+{
+  "name": "SolidHealth PWA",
+  "short_name": "SolidHealth",
+  "icons": [
+	{
+		"src": "Health.png",
+		"sizes": "512x512",
+		"type": "image/png",
+		"purpose": "maskable"
+	}
+  ],
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "orientation":"portrait",
+  "background_color": "black",
+  "theme_color": "black"
+}
