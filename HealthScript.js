@@ -25,7 +25,8 @@ var canvasL=0;
 var intervalX=0;
 var intervalY=0;
 var months="JanFebMarAprMayJunJulAugSepOctNovDec";
-var latest;
+var syncDay; // latest sync
+var latest; // latest change
 var height=1.725; // 1725mm (5'8")
 // solid session & authentication...
 const auth=solidClientAuthentication;
@@ -418,23 +419,25 @@ async function sync() {
 		logs=body.logs;
 		message(logs.length+' logs downloaded',false);
 		save();
+		disconnect();
 	}
 	else { // local data is newer - upload to pod
 		message(' no download - UPLOAD',false);
 		upload();
 	}
 	latest=new Date().toString();
-	window.localStorage.setItem('latest',latest);
-	console.log('latest set to '+latest);
+	syncDay=new Date()/86400000;
+	window.localStorage.setItem('syncDay',syncDay);
 	load(); // ensure working with latest dataset
 }
 async function upload() {
   	if(!session.info.isLoggedIn) {connect(); return;} // ensure connected
   	console.log("UPLOAD",false);
-  	if(logs.length<1) {
-  		message('no logs to upload');
-  		return;
-  	}
+  	if(logs.length<1) { // NEW
+		message('NO DATA');
+		disconnect();
+		return;
+	}
 	var fileName="drive/SolidHealthData.json";
 	console.log(logs.length+" logs - upload");
 	var data=JSON.stringify('logs');
@@ -451,8 +454,15 @@ async function upload() {
     	}
     	console.log('data saved, status: '+response.status);
     	message(logs.length+' logs uploaded');
+    	syncDay=new Date()/86400000;
+		window.localStorage.setItem('syncDay',syncDay);
+		disconnect();
 	}
 	catch(error) {console.error(error.message);alert(error.message);}
+}
+async function disconnect() {
+	var response=await session.logout({logoutType: 'app'});
+	console.log('logout response: ${response.status}');
 }
 // DISPLAY MESSAGE
 function message(text,clear) {
@@ -479,6 +489,12 @@ background=id('background').getContext('2d');
 latest=window.localStorage.getItem('latest');
 if(!latest) latest=new Date(0); // defaults to 1970
 console.log('latest change '+latest);
+syncDay=window.localStorage.getItem('syncDay');
+console.log('latest sync: '+syncDay);
+if(!syncDay) {
+	syncDay=new Date(0)/86400000; // default to 1970
+	window.localStorage.setItem('syncDay',syncDay);
+}
 load();
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
