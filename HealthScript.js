@@ -496,6 +496,7 @@ if(!syncDay) {
 	window.localStorage.setItem('syncDay',syncDay);
 }
 load();
+if(new Date()/86400000-syncDay>5) message('More than 5 days since last sync.');
 // implement service worker if browser is PWA friendly 
 if (navigator.serviceWorker.controller) {
 	console.log('Active service worker found, no need to register')
