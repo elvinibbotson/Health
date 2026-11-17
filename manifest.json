@@ -1,6 +1,6 @@
 {
-  "name": "SolidHealth PWA",
-  "short_name": "SolidHealth",
+  "name": "Health PWA",
+  "short_name": "Health",
   "icons": [
 	{
 		"src": "Health.png",
