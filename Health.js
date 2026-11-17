@@ -405,7 +405,7 @@ async function sync() {
 	latest=window.localStorage.getItem('latest');
 	console.log('latest is '+latest);
 	message('SYNC - DOWNLOAD?',true);
-	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/SolidHealthData.json',
+	var response=await session.fetch('https://elvinibbotson.privatedatapod.com/drive/HealthData.json',
 	{ // ONLY RESTORE DATA FROM POD IF NEWER THAN CURRENT LOCAL DATA
 		method: 'GET',
 		headers: {'If-Modified-Since':latest}
@@ -438,7 +438,7 @@ async function upload() {
 		disconnect();
 		return;
 	}
-	var fileName="drive/SolidHealthData.json";
+	var fileName="drive/HealthData.json";
 	console.log(logs.length+" logs - upload");
 	var data=JSON.stringify('logs');
 	var data={'logs': logs};
