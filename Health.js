@@ -388,7 +388,7 @@ function connect() {
 		auth.login({
     		oidcIssuer:"https://privatedatapod.com",
     		redirectUrl:window.location.href,
-    		clientName:"SolidLog"
+    		clientName:"Health"
     	});
 	}
 	catch(error) {console.error(error.message);}
